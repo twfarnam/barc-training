@@ -24,15 +24,16 @@ data_dir = os.path.join(training_dir,'data')
 #         call([
 #             "ffmpeg",
 #             "-i", os.path.join(video_dir, f),
+#             "-vf", "scale=216:384",
 #             "-r", "1/1",
 #             os.path.join(out_dir, "%03d.jpg"),
 #         ])
 
-# # Create data directory
+# Create data directory
 
-# if os.path.exists(data_dir):
-#     shutil.rmtree(data_dir)
-# os.makedirs(data_dir)
+if os.path.exists(data_dir):
+    shutil.rmtree(data_dir)
+os.makedirs(data_dir)
 
 for d in os.listdir(image_dir):
     for i, f in enumerate(os.listdir(os.path.join(image_dir, d))):
