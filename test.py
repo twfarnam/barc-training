@@ -11,10 +11,10 @@ import json
 
 print 'start load'
 
-with open('out/labels.json', 'r') as fp:
+with open('model/labels.json', 'r') as fp:
     labels = json.load(fp)
 
-model = load_model('out/nn.h5')
+model = load_model('model/nn.h5')
 
 img = load_img('data/validation/bedroom_desk/0.jpg', target_size=(224, 224))
 data = img_to_array(img)
