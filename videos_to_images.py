@@ -5,7 +5,7 @@ import shutil
 from subprocess import call
 
 video_dir = 'videos'
-image_dir = 'images')
+image_dir = 'images'
 
 if not os.path.exists(image_dir):
     os.makedirs(image_dir)
@@ -26,8 +26,10 @@ for slug in os.listdir(video_dir):
                 call([
                     "ffmpeg",
                     "-i", os.path.join(d, f),
-                    "-vf", "scale=216:384",
-                    "-r", "1/1",
+                    "-vf", "scale=84:150",
+                    "-r", "5/1",
                     os.path.join(out_dir, "%03d.jpg"),
                 ])
+
+
 
