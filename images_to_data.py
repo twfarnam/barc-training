@@ -1,13 +1,13 @@
 #! /usr/local/bin/python
 
 import os
-import copyfile from shutil
+from shutil import copyfile, rmtree
 
 image_dir = 'images'
 data_dir = 'data'
 
 if os.path.exists(data_dir):
-    shutil.rmtree(data_dir)
+    rmtree(data_dir)
 os.makedirs(data_dir)
 
 for slug in os.listdir(image_dir):

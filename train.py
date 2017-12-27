@@ -8,7 +8,7 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras.applications.inception_v3 import InceptionV3, preprocess_input
 
 batch_size = 16
-epochs = 1
+epochs = 20
 n_samples = 0
 n_test_samples = 0
 
@@ -70,8 +70,7 @@ x = Dense(1024, activation='relu')(x)
 predictions = Dense(len(labels), activation='softmax')(x)
 model = Model(inputs=base_model.input, outputs=predictions)
 
-# first: train only the top layers (which were randomly initialized)
-# i.e. freeze all convolutional InceptionV3 layers
+# Train top layers
 for layer in base_model.layers:
     layer.trainable = False
 
@@ -89,14 +88,12 @@ model.fit_generator(
 
 
 
-# at this point, the top layers are well trained and we can start fine-tuning
-# convolutional layers from inception V3. We will freeze the bottom N layers
-# and train the remaining top layers.
+# Fine tune all layers
 
 # let's visualize layer names and layer indices to see how many layers
 # we should freeze:
-for i, layer in enumerate(base_model.layers):
-   print(i, layer.name)
+# for i, layer in enumerate(base_model.layers):
+#    print(i, layer.name)
 
 # we chose to train the top 2 inception blocks, i.e. we will freeze
 # the first 249 layers and unfreeze the rest:
