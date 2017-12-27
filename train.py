@@ -7,30 +7,6 @@ from keras.models import Model
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.applications.inception_v3 import InceptionV3
 
-if not os.path.exists('model'):
-    os.makedirs('model')
-
-# create the base pre-trained model
-base_model = InceptionV3(weights='imagenet', include_top=False)
-
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-x = Dense(1024, activation='relu')(x)
-# and a logistic layer -- let's say we have 200 classes
-predictions = Dense(37, activation='softmax')(x)
-
-# this is the model we will train
-model = Model(inputs=base_model.input, outputs=predictions)
-
-# first: train only the top layers (which were randomly initialized)
-# i.e. freeze all convolutional InceptionV3 layers
-for layer in base_model.layers:
-    layer.trainable = False
-
-# compile the model (should be done *after* setting layers to non-trainable)
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
-
-
 batch_size = 16
 
 train_datagen = ImageDataGenerator(
@@ -61,6 +37,33 @@ validation_generator = test_datagen.flow_from_directory(
     target_size=(150, 150),
     batch_size=batch_size
 )
+
+
+
+if not os.path.exists('model'):
+    os.makedirs('model')
+
+# create the base pre-trained model
+base_model = InceptionV3(weights='imagenet', include_top=False)
+
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
+x = Dense(1024, activation='relu')(x)
+# and a logistic layer -- let's say we have 200 classes
+predictions = Dense(len(labels), activation='softmax')(x)
+
+# this is the model we will train
+model = Model(inputs=base_model.input, outputs=predictions)
+
+# first: train only the top layers (which were randomly initialized)
+# i.e. freeze all convolutional InceptionV3 layers
+for layer in base_model.layers:
+    layer.trainable = False
+
+# compile the model (should be done *after* setting layers to non-trainable)
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+
+
 
 
 # train the model on the new data for a few epochs

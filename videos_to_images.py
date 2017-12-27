@@ -1,7 +1,6 @@
 #! /usr/local/bin/python
 
 import os
-import shutil
 from subprocess import call
 
 video_dir = 'videos'
@@ -26,7 +25,7 @@ for slug in os.listdir(video_dir):
                 call([
                     "ffmpeg",
                     "-i", os.path.join(d, f),
-                    "-vf", "scale=84:150",
+                    "-vf", "scale=299:532",
                     "-r", "5/1",
                     os.path.join(out_dir, "%03d.jpg"),
                 ])

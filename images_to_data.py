@@ -1,7 +1,7 @@
 #! /usr/local/bin/python
 
 import os
-import shutil
+import copyfile from shutil
 
 image_dir = 'images'
 data_dir = 'data'
@@ -22,5 +22,5 @@ for slug in os.listdir(image_dir):
         if not os.path.exists(dest_dir): os.makedirs(dest_dir)
         dest_path = os.path.join(dest_dir, str(i) + '.jpg')
         # print(src_path, dest_path)
-        shutil.copyfile(src_path, dest_path)
+        copyfile(src_path, dest_path)
 
