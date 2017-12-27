@@ -5,6 +5,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
+from keras.applications.inception_v3 import preprocess_input
 import time
 import json
 import random
@@ -24,6 +25,7 @@ for slug in labels:
     image = load_img(image_path, target_size=(224, 224))
     data = img_to_array(image)
     data = data.reshape((1,) + data.shape)
+    data = preprocess_input(data)
 
     time1 = time.time()
     prediction = model.predict(data)

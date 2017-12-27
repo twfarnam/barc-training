@@ -5,12 +5,24 @@ import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
 from keras.layers import Dense, GlobalAveragePooling2D
-from keras.applications.inception_v3 import InceptionV3
+from keras.applications.inception_v3 import InceptionV3, preprocess_input
 
 batch_size = 16
+epochs = 1
+n_samples = 0
+n_test_samples = 0
+
+for slug in os.listdir('data/train'):
+    n_samples += len(os.listdir(os.path.join('data/train', slug)))
+
+for slug in os.listdir('data/validation'):
+    n_test_samples += len(os.listdir(os.path.join('data/train', slug)))
 
 train_datagen = ImageDataGenerator(
-    rescale=1./255,
+    preprocessing_function=preprocess_input,
+    rotation_range=30,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
     shear_range=0.2,
     zoom_range=0.2,
     horizontal_flip=True
@@ -19,7 +31,7 @@ train_datagen = ImageDataGenerator(
 
 train_generator = train_datagen.flow_from_directory(
     'data/train',
-    target_size=(150, 150),
+    target_size=(299, 299),
     batch_size=batch_size
 )
 
@@ -30,11 +42,19 @@ for key, value in labels_dict.iteritems():
 with open('model/labels.json', 'w') as fp:
     json.dump(labels, fp)
 
-test_datagen = ImageDataGenerator(rescale=1./255)
+validation_datagen = ImageDataGenerator(
+    preprocessing_function=preprocess_input,
+    rotation_range=30,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True
+)
 
-validation_generator = test_datagen.flow_from_directory(
+validation_generator = validation_datagen.flow_from_directory(
     'data/validation',
-    target_size=(150, 150),
+    target_size=(299, 299),
     batch_size=batch_size
 )
 
@@ -43,16 +63,11 @@ validation_generator = test_datagen.flow_from_directory(
 if not os.path.exists('model'):
     os.makedirs('model')
 
-# create the base pre-trained model
 base_model = InceptionV3(weights='imagenet', include_top=False)
-
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dense(1024, activation='relu')(x)
-# and a logistic layer -- let's say we have 200 classes
 predictions = Dense(len(labels), activation='softmax')(x)
-
-# this is the model we will train
 model = Model(inputs=base_model.input, outputs=predictions)
 
 # first: train only the top layers (which were randomly initialized)
@@ -63,16 +78,13 @@ for layer in base_model.layers:
 # compile the model (should be done *after* setting layers to non-trainable)
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-
-
-
 # train the model on the new data for a few epochs
 model.fit_generator(
     train_generator,
-    steps_per_epoch=2000 // batch_size,
-    epochs=1, # 50,
+    steps_per_epoch= n_samples // batch_size,
+    epochs=epochs,
     validation_data=validation_generator,
-    validation_steps=800 // batch_size
+    validation_steps= n_test_samples // batch_size
 )
 
 
@@ -100,10 +112,10 @@ model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossent
 # alongside the top Dense layers
 model.fit_generator(
     train_generator,
-    steps_per_epoch=2000 // batch_size,
-    epochs=1, # 50,
+    steps_per_epoch= n_samples // batch_size,
+    epochs=epochs,
     validation_data=validation_generator,
-    validation_steps=800 // batch_size
+    validation_steps= n_test_samples // batch_size
 )
 
 model.save('model/nn.h5')
