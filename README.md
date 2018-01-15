@@ -15,7 +15,15 @@ Download the NN drivers and run:
 
     sudo dpkg -i libcudnn5_5.1.10-1+cuda8.0_ppc64el.deb
 
-Upload the data using SCP and run the following:
+Upload the data:
 
+    tar -c data/ > data.tar
+    scp data.tar tim@35.197.88.109:~/barc-training/data.tar
+
+From the trainer machine:
+
+    cd barc-trainer
+    rm -rf data
+    tar xf data.tar
     python train.py
 

@@ -105,15 +105,21 @@ for layer in model.layers[249:]: layer.trainable = True
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
 
-# we train our model again (this time fine-tuning the top 2 inception blocks
-# alongside the top Dense layers
+tbCallBack = keras.callbacks.TensorBoard(
+    log_dir='./log',
+    write_graph=True,
+    write_images=True
+)
+
 model.fit_generator(
     train_generator,
     steps_per_epoch= n_samples // batch_size,
     epochs=epochs,
     validation_data=validation_generator,
-    validation_steps= n_test_samples // batch_size
+    validation_steps= n_test_samples // batch_size,
+    callbacks=[tbCallBack]
 )
 
 model.save('model/nn.h5')
+
 

@@ -15,7 +15,7 @@ for slug in os.listdir(video_dir):
     slug_dir = os.path.join(image_dir, slug)
     if not os.path.exists(slug_dir): os.makedirs(slug_dir)
     for f in os.listdir(d):
-        if (f[-3:].lower() == 'mov'):
+        if (f[-3:].lower() == 'mov' or f[-3:].lower() == 'm4v'):
             out_dir = os.path.join(image_dir, slug, f)
             if os.path.exists(out_dir):
                 print('exists: ' + f)
