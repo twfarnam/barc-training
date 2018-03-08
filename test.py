@@ -15,7 +15,7 @@ print 'start load'
 with open('model/labels.json', 'r') as fp:
     labels = json.load(fp)
 
-model = load_model('model/nn.h5')
+model = load_model('model/inception.h5')
 model._make_predict_function()
 
 for slug in labels:

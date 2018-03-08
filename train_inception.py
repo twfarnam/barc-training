@@ -123,6 +123,6 @@ model.fit_generator(
     callbacks=[tbCallBack]
 )
 
-model.save('model/nn.h5')
+model.save('model/inception.h5')
 
 
