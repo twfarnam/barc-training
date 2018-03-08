@@ -1,15 +1,16 @@
-#! /usr/local/bin/python
+#! /usr/bin/env python
 
 import json
 import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
-from keras.utils import multi_gpu_model
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.applications.inception_v3 import InceptionV3, preprocess_input
+from keras.callbacks import TensorBoard
+from coremltools.converters.keras import convert
 
 batch_size = 16
-epochs = 20
+epochs = 1
 n_samples = 0
 n_test_samples = 0
 
@@ -70,7 +71,6 @@ x = GlobalAveragePooling2D()(x)
 x = Dense(1024, activation='relu')(x)
 predictions = Dense(len(labels), activation='softmax')(x)
 model = Model(inputs=base_model.input, outputs=predictions)
-model = multi_gpu_model(model, gpus=4)
 
 
 # Train top layers
@@ -108,8 +108,17 @@ for layer in model.layers[249:]: layer.trainable = True
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
 
-tbCallBack = keras.callbacks.TensorBoard(
-    log_dir='./log',
+log_dir = './log_inception',
+if os.path.exists(log_dir):
+    rmtree(log_dir)
+
+os.makedirs(log_dir)
+
+tbCallBack = TensorBoard(
+    log_dir=log_dir,
+    histogram_freq=1,
+    batch_size=batch_size,
+    write_grads=True,
     write_graph=True,
     write_images=True
 )
@@ -124,5 +133,14 @@ model.fit_generator(
 )
 
 model.save('model/inception.h5')
+
+coreml_model = convert(
+    model,
+    input_names='image',
+    image_input_names='image',
+    output_names=labels,
+)
+
+coreml_model.save('model/inception.mlmodel')
 
 

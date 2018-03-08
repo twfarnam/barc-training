@@ -1,10 +1,10 @@
-#! /usr/local/bin/python
+#! /usr/bin/env python
 
 import json
 import os
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D
+from keras.layers import Reshape, GlobalAveragePooling2D, Dropout, Conv2D, Activation
 from keras.optimizers import SGD
 from keras.applications.mobilenet import MobileNet, preprocess_input
 from keras.callbacks import TensorBoard
@@ -68,14 +68,19 @@ base_model = MobileNet(
     input_shape=(224, 224, 3),
     include_top=False,
     weights='imagenet',
-    classes=len(labels)
 )
 
 # make the top of the model, using our number of classes
 x = base_model.output
+
+for i, layer in enumerate(base_model.layers):
+    print(i, layer.name)
+import sys
+sys.exit()
+
 x = GlobalAveragePooling2D()(x)
-x = Reshape(shape, name='reshape_1')(x)
-x = Dropout(dropout, name='dropout')(x)
+x = Reshape((1, 1, 1024), name='reshape_1')(x)
+x = Dropout(1e-3, name='dropout')(x)
 x = Conv2D(len(labels), (1, 1), padding='same', name='conv_preds')(x)
 x = Activation('softmax', name='act_softmax')(x)
 x = Reshape((len(labels),), name='reshape_2')(x)
@@ -87,11 +92,20 @@ for layer in base_model.layers:
 
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-tbCallBack = keras.callbacks.TensorBoard(
-    log_dir='./log',
+log_dir = './log_inception',
+if os.path.exists(log_dir):
+    rmtree(log_dir)
+os.makedirs(log_dir)
+
+tbCallBack = TensorBoard(
+    log_dir=log_dir,
+    histogram_freq=1,
+    batch_size=batch_size,
+    write_grads=True,
     write_graph=True,
     write_images=True
 )
+
 
 # train the top of the model
 model.fit_generator(
@@ -99,8 +113,8 @@ model.fit_generator(
     steps_per_epoch= n_samples // batch_size,
     epochs=epochs,
     validation_data=validation_generator,
-    validation_steps= n_test_samples // batch_size
-    callbacks=[tbCallBack]
+    validation_steps= n_test_samples // batch_size,
+    callbacks=[tbCallBack],
 )
 
 
@@ -127,12 +141,11 @@ model.fit_generator(
     epochs=epochs,
     validation_data=validation_generator,
     validation_steps= n_test_samples // batch_size,
-    callbacks=[tbCallBack]
+    callbacks=[tbCallBack],
 )
 
 model.save('model/mobilenets.h5')
 
-# XXX must add output labels here
 coreml_model = convert(
     model,
     input_names='image',

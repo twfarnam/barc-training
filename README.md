@@ -35,5 +35,6 @@ From the trainer machine:
     cd barc-trainer
     rm -rf data
     tar xf data.tar
-    LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH python train.py
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+    ./train_mobilenets.py
 

@@ -4,4 +4,6 @@ images
 data
 data.tar
 model
+log_inception
+log_mobilenets
 
