@@ -108,7 +108,7 @@ for layer in model.layers[249:]: layer.trainable = True
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
 
-log_dir = './log_inception',
+log_dir = './log_inception'
 if os.path.exists(log_dir):
     rmtree(log_dir)
 

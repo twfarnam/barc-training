@@ -92,7 +92,7 @@ for layer in base_model.layers:
 
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-log_dir = './log_inception',
+log_dir = './log_inception'
 if os.path.exists(log_dir):
     rmtree(log_dir)
 os.makedirs(log_dir)
