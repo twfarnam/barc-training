@@ -72,12 +72,6 @@ base_model = MobileNet(
 
 # make the top of the model, using our number of classes
 x = base_model.output
-
-for i, layer in enumerate(base_model.layers):
-    print(i, layer.name)
-import sys
-sys.exit()
-
 x = GlobalAveragePooling2D()(x)
 x = Reshape((1, 1, 1024), name='reshape_1')(x)
 x = Dropout(1e-3, name='dropout')(x)

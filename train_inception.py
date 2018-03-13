@@ -37,10 +37,13 @@ train_generator = train_datagen.flow_from_directory(
     batch_size=batch_size
 )
 
+
 labels_dict = train_generator.class_indices
 labels = [None] * len(labels_dict.items())
 for key, value in labels_dict.iteritems():
     labels[value] = key
+if not os.path.exists('model'):
+    os.makedirs('model')
 with open('model/labels.json', 'w') as fp:
     json.dump(labels, fp)
 
@@ -61,9 +64,6 @@ validation_generator = validation_datagen.flow_from_directory(
 )
 
 
-
-if not os.path.exists('model'):
-    os.makedirs('model')
 
 base_model = InceptionV3(weights='imagenet', include_top=False)
 x = base_model.output
