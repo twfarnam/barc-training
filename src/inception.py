@@ -1,5 +1,3 @@
-#! /usr/bin/env python
-
 import json
 import os
 from keras.preprocessing.image import ImageDataGenerator
@@ -8,6 +6,20 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras.applications.inception_v3 import InceptionV3, preprocess_input
 from keras.callbacks import TensorBoard
 from coremltools.converters.keras import convert
+
+
+if not os.path.exists('model'):
+    os.makedirs('model')
+
+labels = row[0] for row in categories
+with open('model/labels.json', 'w') as fp:
+    json.dump(labels, fp)
+
+
+
+
+
+
 
 batch_size = 16
 epochs = 1

@@ -1,9 +1,7 @@
 
-videos
+barc.db
 images
-data
-data.tar
 model
-log_inception
-log_mobilenets
+log
+__pycache__/
 

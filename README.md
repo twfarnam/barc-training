@@ -4,6 +4,7 @@ To run on new VPS, and run the following:
 
     sudo apt-get install python-pip
     pip install -r requirements.txt
+    pip install tensorflow-gpu==1.5.0
 
     curl -O
   http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
