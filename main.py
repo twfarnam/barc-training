@@ -3,6 +3,7 @@
 import argparse
 from src.database import count_by_category
 from src.mobilenets import train_mobilenets
+from src.inception import train_inception
 
 parser = argparse.ArgumentParser(description='Train a neural network from Barc images')
 
@@ -51,8 +52,8 @@ if args.count:
     # print(count_by_category())
     for category, n in count_by_category():
         print("{:>15}{:>15}".format(category, n))
-# elif args.architecture[0] == 'inception':
-#     train_inception()
+elif args.architecture[0] == 'inception':
+    train_inception(epochs=args.epochs[0], log_dir=args.log_dir[0])
 elif args.architecture[0] == 'mobilenets':
     train_mobilenets(epochs=args.epochs[0], log_dir=args.log_dir[0])
 

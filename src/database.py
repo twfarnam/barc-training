@@ -27,7 +27,7 @@ def categories():
     query = 'SELECT id, object FROM categories ORDER BY object'
     categories = cursor.execute(query).fetchall()
     ids = [ row[0] for row in categories ]
-    labels = [ row[0] for row in categories ]
+    labels = [ row[1] for row in categories ]
     return ids, labels
 
 def cat_for_image(image_id, category_ids):
