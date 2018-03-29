@@ -28,14 +28,19 @@ Download the NN drivers and run:
 
 Upload the data:
 
-    tar -c data/ > data.tar
+    tar -c images/ barc.db > data.tar
     scp data.tar tim@35.197.88.109:~/barc-training/data.tar
 
 From the trainer machine:
 
     cd barc-trainer
-    rm -rf data
+    rm -rf images/ barc.db
     tar xf data.tar
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
-    ./train_mobilenets.py
+    ./main.py
+
+To run tensorboard:
+
+  tensorboard --logdir ./log
+
 

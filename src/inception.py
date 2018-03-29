@@ -21,7 +21,7 @@ def train_inception(epochs=None, log_dir=None):
         weights='imagenet',
     )
 
-    category_ids, labels = categories()
+    category_ids, labels, class_weights = categories()
 
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
@@ -37,14 +37,14 @@ def train_inception(epochs=None, log_dir=None):
     if os.path.exists(log_dir): rmtree(log_dir)
     os.makedirs(log_dir)
 
-    # tb_callback = TensorBoard(
-    #     log_dir=log_dir,
-    #     histogram_freq=1,
-    #     batch_size=batch_size,
-    #     write_grads=True,
-    #     write_graph=True,
-    #     write_images=True
-    # )
+    tb_callback = TensorBoard(
+        log_dir=log_dir,
+        histogram_freq=1,
+        batch_size=batch_size,
+        write_grads=True,
+        write_graph=True,
+        write_images=True
+    )
 
     train_generator, steps = make_generator(
         target_size=(299, 299, ),
@@ -56,7 +56,8 @@ def train_inception(epochs=None, log_dir=None):
         train_generator(),
         steps_per_epoch=steps,
         epochs=epochs,
-        # callbacks=[ tb_callback ],
+        class_weight=class_weights,
+        callbacks=[ tb_callback ],
     )
 
     for layer in model.layers[:249]: layer.trainable = False
@@ -71,7 +72,8 @@ def train_inception(epochs=None, log_dir=None):
         train_generator(),
         steps_per_epoch=steps,
         epochs=epochs,
-        # callbacks=[ tb_callback ]
+        class_weight=class_weights,
+        callbacks=[ tb_callback ]
     )
 
     if not os.path.exists('model'):

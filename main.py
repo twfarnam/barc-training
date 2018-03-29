@@ -1,12 +1,13 @@
 #! /usr/bin/env python
 
 import argparse
-from src.database import count_by_category
+from src.database import categories
 from src.mobilenets import train_mobilenets
 from src.inception import train_inception
 
-parser = argparse.ArgumentParser(description='Train a neural network from Barc images')
-
+parser = argparse.ArgumentParser(
+    description='Train a neural network from Barc images'
+)
 
 parser.add_argument(
     '--count',
@@ -32,7 +33,7 @@ parser.add_argument(
     dest='epochs',
     nargs=1,
     type=int,
-    default=[ 1 ],
+    default=[ 20 ],
     help='number of epochs to train',
 )
 
@@ -49,9 +50,9 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.count:
-    # print(count_by_category())
-    for category, n in count_by_category():
-        print("{:>15}{:>15}".format(category, n))
+    ids, labels, counts = categories()
+    for i, label in enumerate(labels):
+        print("{:<35}{:>4}".format(label, counts[i]))
 elif args.architecture[0] == 'inception':
     train_inception(epochs=args.epochs[0], log_dir=args.log_dir[0])
 elif args.architecture[0] == 'mobilenets':
