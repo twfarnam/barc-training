@@ -39,10 +39,8 @@ def train_inception(epochs=None, log_dir=None):
 
     tb_callback = TensorBoard(
         log_dir=log_dir,
-        histogram_freq=1,
         batch_size=batch_size,
         write_grads=True,
-        write_graph=True,
         write_images=True
     )
 
