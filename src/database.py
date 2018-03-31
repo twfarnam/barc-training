@@ -24,7 +24,7 @@ def categories():
     '''
     categories = cursor.execute(query).fetchall()
     ids = [ row[0] for row in categories ]
-    labels = [ row[1] for row in categories ]
+    labels = [ str(row[1]) for row in categories ]
     weights = [ row[2] for row in categories ]
     return ids, labels, weights
 
