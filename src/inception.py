@@ -35,7 +35,7 @@ def train_inception(epochs=None, log_dir=None):
 
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-    timestamp = datetime.datetime.now().isoformat(' ')[:19]
+    timestamp = datetime.now().isoformat(' ')[:19]
     log_dir = os.path.join('log', timestamp)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
