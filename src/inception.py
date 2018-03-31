@@ -1,7 +1,6 @@
 import json
 import os
-from .generator import make_generator
-from .database import categories
+from datetime import datetime
 from shutil import rmtree
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Model
@@ -10,6 +9,8 @@ from keras.applications.inception_v3 import InceptionV3, preprocess_input
 from keras.callbacks import TensorBoard
 from keras.optimizers import SGD
 from coremltools.converters.keras import convert
+from .generator import make_generator
+from .database import categories
 
 
 def train_inception(epochs=None, log_dir=None):
@@ -34,8 +35,10 @@ def train_inception(epochs=None, log_dir=None):
 
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-    if os.path.exists(log_dir): rmtree(log_dir)
-    os.makedirs(log_dir)
+    timestamp = datetime.datetime.now().isoformat(' ')[:19]
+    log_dir = os.path.join('log', timestamp)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
 
     tb_callback = TensorBoard(
         log_dir=log_dir,

@@ -46,6 +46,6 @@ def make_generator(target_size=None, batch_size=None, category_ids=None):
                 yield (x, y)
 
     return (train_generator, steps, )
-    # return (train_generator, 3, )
+    # return (train_generator, 1, )
 
 

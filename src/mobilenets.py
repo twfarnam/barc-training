@@ -1,8 +1,7 @@
 import json
 import os
 import numpy
-from .generator import make_generator
-from .database import categories
+from datetime import datetime
 from shutil import rmtree
 from keras.models import Model
 from keras.layers import Reshape, GlobalAveragePooling2D, Dropout, Conv2D, Activation
@@ -10,9 +9,11 @@ from keras.optimizers import SGD
 from keras.applications.mobilenet import MobileNet
 from keras.callbacks import TensorBoard
 from coremltools.converters.keras import convert
+from .generator import make_generator
+from .database import categories
 
 
-def train_mobilenets(epochs=None, log_dir=None):
+def train_mobilenets(epochs=None):
     batch_size = 16
 
     base_model = MobileNet(
@@ -39,8 +40,10 @@ def train_mobilenets(epochs=None, log_dir=None):
 
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
-    if os.path.exists(log_dir): rmtree(log_dir)
-    os.makedirs(log_dir)
+    timestamp = datetime.now().isoformat(' ')[:19]
+    log_dir = os.path.join('log', timestamp)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
 
     tb_callback = TensorBoard(
         log_dir=log_dir,

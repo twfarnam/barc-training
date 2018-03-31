@@ -37,16 +37,6 @@ parser.add_argument(
     help='number of epochs to train',
 )
 
-parser.add_argument(
-    '--log-dir',
-    action='store',
-    dest='log_dir',
-    nargs=1,
-    type=str,
-    default=[ './log' ],
-    help='output directory for TensorBoard, default ./log',
-)
-
 args = parser.parse_args()
 
 if args.count:
@@ -54,7 +44,7 @@ if args.count:
     for i, label in enumerate(labels):
         print("{:<35}{:>4}".format(label, counts[i]))
 elif args.architecture[0] == 'inception':
-    train_inception(epochs=args.epochs[0], log_dir=args.log_dir[0])
+    train_inception(epochs=args.epochs[0])
 elif args.architecture[0] == 'mobilenets':
-    train_mobilenets(epochs=args.epochs[0], log_dir=args.log_dir[0])
+    train_mobilenets(epochs=args.epochs[0])
 
