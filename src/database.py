@@ -12,9 +12,11 @@ def images():
 def categories():
     cursor = db.cursor()
     query = '''
-        SELECT id, room || ' | ' || object, count(*)
+        SELECT categories.id, room || ' | ' || object, count(*)
         FROM categories
-        LEFT JOIN images_categories AS i ON i.category_id = categories.id
+        LEFT JOIN images_categories ON category_id = categories.id
+        WHERE image_id NOT IN
+            (SELECT id FROM images WHERE deleted_at IS NOT NULL)
         GROUP BY categories.id
         ORDER BY room, object
     '''

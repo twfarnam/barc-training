@@ -1,4 +1,5 @@
 import numpy
+from random import shuffle
 from .database import images, categories, cat_for_image
 from PIL import Image as PILImage
 from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
@@ -33,6 +34,7 @@ def make_generator(target_size=None, batch_size=None, category_ids=None):
 
     def train_generator():
         while 1:
+            shuffle(image_ids)
             for i in range(steps):
                 start = i * batch_size
                 end = (i + 1) * batch_size
