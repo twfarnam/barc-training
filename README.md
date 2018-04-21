@@ -2,21 +2,15 @@
 
 To run on new VPS, and run the following:
 
-    sudo apt-get install python-pip
-    pip install -r requirements.txt
-    pip install tensorflow-gpu==1.5.0
+    sudo apt-get install python3-pip
+    pip3 install -r requirements.txt
+    pip3 install tensorflow-gpu==1.5.0
 
     curl -O
   http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
     sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
     sudo apt-get update
-    sudo apt-get install cuda-8-0
-
-N.B. the above stopped working with Linux kernel 4.13. Check the install logs carefully and if building the kernel module failed, you can follow instructions here:
-
-https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07#install-nvidia-graphics-driver-via-runfile
-
-https://stackoverflow.com/questions/48220265/cannot-install-nvidia-driver-in-funcion-block-cpu-fault-locked-error-implic
+    sudo apt-get install cuda-9-0
 
 Make sure that the driver is installed by running:
 
@@ -24,7 +18,7 @@ Make sure that the driver is installed by running:
 
 Download the NN drivers and run:
 
-    sudo dpkg -i libcudnn5_5.1.10-1+cuda8.0_ppc64el.deb
+    sudo dpkg -i libcudnn7_7.0.4.31-1+cuda9.0_amd64.deb
 
 Upload the data:
 

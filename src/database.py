@@ -3,13 +3,9 @@ import sqlite3
 db_path = 'barc.db'
 db = sqlite3.connect(db_path, check_same_thread=False)
 
-def count():
-    cursor = db.cursor()
-    return cursor.execute('SELECT count(*) FROM images').fetchone()[0]
-
 def images():
     cursor = db.cursor()
-    query = 'SELECT id FROM images' 
+    query = 'SELECT id FROM images WHERE deleted_at IS NULL' 
     result = cursor.execute(query).fetchall()
     return [ row[0] for row in result ]
 
