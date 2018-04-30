@@ -97,6 +97,10 @@ def train_mobilenets(epochs=None):
         input_names='image',
         image_input_names='image',
         class_labels=labels,
+        image_scale=2./255,
+        red_bias=-1,
+        green_bias=-1,
+        blue_bias=-1,
     )
 
     coreml_model.save('model/mobilenets.mlmodel')

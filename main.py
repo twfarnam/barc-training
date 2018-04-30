@@ -4,9 +4,16 @@ import argparse
 from src.database import categories
 from src.mobilenets import train_mobilenets
 from src.inception import train_inception
+from src.convert import convert_model
 
 parser = argparse.ArgumentParser(
     description='Train a neural network from Barc images'
+)
+
+parser.add_argument(
+    '--convert',
+    action='store_true',
+    help='converts an .h5 model to .mlmodel for CoreML',
 )
 
 parser.add_argument(
@@ -16,7 +23,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--architecture',
+    '--arch',
     action='store',
     dest='architecture',
     nargs=1,
@@ -43,6 +50,8 @@ if args.count:
     ids, labels, counts = categories()
     for i, label in enumerate(labels):
         print("{:<35}{:>4}".format(label, counts[i]))
+elif args.convert:
+    convert_model(architecture=args.architecture[0])
 elif args.architecture[0] == 'inception':
     train_inception(epochs=args.epochs[0])
 elif args.architecture[0] == 'mobilenets':

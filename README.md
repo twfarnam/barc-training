@@ -31,10 +31,10 @@ From the trainer machine:
     rm -rf images/ barc.db
     tar xf data.tar
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
-    ./main.py
+    ./main.py -h
 
 To run tensorboard:
 
-  tensorboard --logdir ./log
+    tensorboard --logdir ./log
 
 

@@ -92,6 +92,8 @@ def train_inception(epochs=None, log_dir=None):
 
     coreml_model = convert(
         model,
+        input_names='image',
+        image_input_names='image',
         class_labels=labels,
         image_scale=2./255,
         red_bias=-1,
