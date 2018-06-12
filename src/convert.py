@@ -1,8 +1,16 @@
 import os
 import json
 import keras
-from keras.utils.generic_utils import CustomObjectScope
-from keras.applications.mobilenet import relu6, DepthwiseConv2D
+import keras_applications
+
+keras_applications.set_keras_submodules(
+    backend=keras.backend,
+    engine=keras.engine,
+    layers=keras.layers,
+    models=keras.models,
+    utils=keras.utils)
+
+from keras_applications.mobilenet_v2 import relu6
 from coremltools.converters.keras import convert
 
 def convert_model(architecture):
@@ -14,9 +22,9 @@ def convert_model(architecture):
 
     if architecture == 'mobilenets':
         model_path = os.path.join(root, 'model/mobilenets.h5')
-        layers = { 'relu6': relu6, 'DepthwiseConv2D': DepthwiseConv2D }
-        with CustomObjectScope(layers):
-            model = keras.models.load_model(model_path)
+        model = keras.models.load_model(
+                    model_path,
+                    custom_objects={ 'relu6': relu6 })
     elif architecture == 'inception':
         model_path = os.path.join(root, 'model/inception.h5')
         model = keras.models.load_model(model_path)

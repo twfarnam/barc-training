@@ -2,9 +2,6 @@
 
 import argparse
 from src.database import categories
-from src.mobilenets import train_mobilenets
-from src.inception import train_inception
-from src.convert import convert_model
 
 parser = argparse.ArgumentParser(
     description='Train a neural network from Barc images'
@@ -51,9 +48,12 @@ if args.count:
     for i, label in enumerate(labels):
         print("{:<35}{:>4}".format(label, counts[i]))
 elif args.convert:
+    from src.convert import convert_model
     convert_model(architecture=args.architecture[0])
 elif args.architecture[0] == 'inception':
+    from src.inception import train_inception
     train_inception(epochs=args.epochs[0])
 elif args.architecture[0] == 'mobilenets':
+    from src.mobilenets import train_mobilenets
     train_mobilenets(epochs=args.epochs[0])
 

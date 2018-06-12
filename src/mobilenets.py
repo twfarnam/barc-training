@@ -3,20 +3,33 @@ import os
 import numpy
 from datetime import datetime
 from shutil import rmtree
+
+import keras
+import keras_applications
+
+keras_applications.set_keras_submodules(
+    backend=keras.backend,
+    engine=keras.engine,
+    layers=keras.layers,
+    models=keras.models,
+    utils=keras.utils)
+
+from keras_applications.mobilenet_v2 import MobileNetV2 
 from keras.models import Model
-from keras.layers import Reshape, GlobalAveragePooling2D, Dropout, Conv2D, Activation
+from keras.layers import GlobalAveragePooling2D, Dense
 from keras.optimizers import SGD
-from keras.applications.mobilenet import MobileNet
 from keras.callbacks import TensorBoard
 from coremltools.converters.keras import convert
+
 from .generator import make_generator
 from .database import categories
 
 
 def train_mobilenets(epochs=None):
+
     batch_size = 16
 
-    base_model = MobileNet(
+    base_model = MobileNetV2(
         input_shape=(224, 224, 3),
         include_top=False,
         weights='imagenet',
@@ -24,14 +37,9 @@ def train_mobilenets(epochs=None):
 
     category_ids, labels, class_weights = categories()
 
-    # make the top of the model, using our number of classes
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
-    x = Reshape((1, 1, 1024), name='reshape_1')(x)
-    x = Dropout(1e-3, name='dropout')(x)
-    x = Conv2D(len(labels), (1, 1), padding='same', name='conv_preds')(x)
-    x = Activation('sigmoid', name='act_sigmoid')(x)
-    x = Reshape((len(labels),), name='reshape_2')(x)
+    x = Dense(len(labels), activation='sigmoid', name='sigmoid')(x)
     model = Model(inputs=base_model.input, outputs=x)
 
     # train the top
