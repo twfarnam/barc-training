@@ -30,7 +30,7 @@ def train_mobilenets(epochs=None):
     x = Reshape((1, 1, 1024), name='reshape_1')(x)
     x = Dropout(1e-3, name='dropout')(x)
     x = Conv2D(len(labels), (1, 1), padding='same', name='conv_preds')(x)
-    x = Activation('softmax', name='act_softmax')(x)
+    x = Activation('sigmoid', name='act_sigmoid')(x)
     x = Reshape((len(labels),), name='reshape_2')(x)
     model = Model(inputs=base_model.input, outputs=x)
 

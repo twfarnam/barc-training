@@ -27,7 +27,7 @@ def train_inception(epochs=None, log_dir=None):
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
     x = Dense(1024, activation='relu')(x)
-    predictions = Dense(len(labels), activation='softmax')(x)
+    predictions = Dense(len(labels), activation='sigmoid')(x)
     model = Model(inputs=base_model.input, outputs=predictions)
 
     for layer in base_model.layers:
