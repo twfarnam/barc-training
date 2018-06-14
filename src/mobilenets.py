@@ -46,7 +46,10 @@ def train_mobilenets(epochs=None):
     for layer in base_model.layers:
         layer.trainable = False
 
-    model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+    model.compile(
+        optimizer=SGD(lr=0.01, momentum=0.9),
+        loss='categorical_crossentropy'
+    )
 
     timestamp = datetime.now().isoformat(' ')[:19]
     log_dir = os.path.join('log', timestamp)
@@ -79,6 +82,7 @@ def train_mobilenets(epochs=None):
     for layer in model.layers[:70]: layer.trainable = False
     for layer in model.layers[70:]: layer.trainable = True
 
+    # slower learning rate for fine tuning
     model.compile(
         optimizer=SGD(lr=0.0001, momentum=0.9),
         loss='categorical_crossentropy'
